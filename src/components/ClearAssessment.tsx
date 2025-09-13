@@ -129,9 +129,9 @@ const ClearAssessment: React.FC<ClearAssessmentProps> = ({ assessment }) => {
 
     // Slides 2-6: Individual category details
     ...clearCategories.filter(cat => cat.data).map((category) => {
-      const score = category.data.current_score || category.data.score || 0;
-      const issue = category.data.primary_issue || category.data.top_risk || '';
-      const quickWin = category.data.quick_win || '';
+      const score = category.data?.current_score || category.data?.score || 0;
+      const issue = category.data?.primary_issue || category.data?.top_risk || '';
+      const quickWin = category.data?.quick_win || '';
       const IconComponent = category.icon;
 
       return {
@@ -425,7 +425,7 @@ const ClearAssessment: React.FC<ClearAssessmentProps> = ({ assessment }) => {
 
     {/* Modal for Book Strategy Session */}
     <AnimatePresence>
-      {showModal && (console.log('Rendering modal, showModal:', showModal) || true) && (
+      {showModal && (
         <>
           <motion.div
             className="fixed inset-0 bg-black/60 z-[60]"

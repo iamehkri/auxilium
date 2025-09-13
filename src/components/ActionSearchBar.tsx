@@ -5,8 +5,8 @@ import { useState, useEffect } from "react"
 // Extend Window interface for Speech Recognition
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition
-    webkitSpeechRecognition: typeof SpeechRecognition
+    SpeechRecognition: any
+    webkitSpeechRecognition: any
   }
 }
 import { motion } from "framer-motion"
@@ -49,7 +49,7 @@ const ActionSearchBar: React.FC<ActionSearchBarProps> = ({ onChatSubmit, onStepC
 
   // Voice recognition state
   const [isListening, setIsListening] = useState(false)
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null)
+  const [recognition, setRecognition] = useState<any>(null)
 
   // Notify parent of step changes
   useEffect(() => {
@@ -248,7 +248,7 @@ const ActionSearchBar: React.FC<ActionSearchBarProps> = ({ onChatSubmit, onStepC
       setIsListening(true)
     }
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript
       setQuery(transcript)
       setIsListening(false)

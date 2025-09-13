@@ -297,7 +297,7 @@ export default function RotatingEarth({ width = 600, height = 600, className = "
     const rotate = () => {
       if (autoRotate) {
         rotation[0] += rotationSpeed
-        projection.rotate(rotation)
+        projection.rotate(rotation as [number, number, number])
         render()
       }
     }
@@ -321,7 +321,7 @@ export default function RotatingEarth({ width = 600, height = 600, className = "
         rotation[0] = startRotation[0] + (targetRotation[0] - startRotation[0]) * eased
         rotation[1] = startRotation[1] + (targetRotation[1] - startRotation[1]) * eased
         
-        projection.rotate(rotation)
+        projection.rotate(rotation as [number, number, number])
         render()
         
         if (progress < 1) {
@@ -354,7 +354,7 @@ export default function RotatingEarth({ width = 600, height = 600, className = "
       })
       
       if (clickedCity) {
-        centerOnCity(clickedCity.coords)
+        centerOnCity(clickedCity.coords as [number, number])
         return
       }
     }
@@ -378,7 +378,7 @@ export default function RotatingEarth({ width = 600, height = 600, className = "
         rotation[1] = startRotation[1] - dy * sensitivity
         rotation[1] = Math.max(-90, Math.min(90, rotation[1]))
 
-        projection.rotate(rotation)
+        projection.rotate(rotation as [number, number, number])
         render()
       }
 

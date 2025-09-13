@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useInView } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Box, Plane, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
-import { Tilt } from 'react-parallax-tilt';
+import Tilt from 'react-parallax-tilt';
 
 interface Project {
   id: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Line, Sphere, Text } from '@react-three/drei';
 import * as THREE from 'three';
@@ -170,32 +170,34 @@ function DataPulse({
 function NeuralNetworkScene() {
   const { nodes, connections } = useMemo(() => generateNetworkData(), []);
   const groupRef = useRef<THREE.Group>(null);
-  
+  const [time, setTime] = useState(0);
+
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.1) * 0.1;
       groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.15) * 0.05;
     }
+    setTime(state.clock.elapsedTime);
   });
 
   return (
     <group ref={groupRef}>
       {/* Render nodes */}
       {nodes.map((node) => (
-        <NeuralNode 
-          key={node.id} 
-          node={node} 
-          time={state.clock.elapsedTime}
+        <NeuralNode
+          key={node.id}
+          node={node}
+          time={time}
         />
       ))}
-      
+
       {/* Render connections */}
       {connections.map((connection, index) => (
         <NeuralConnection
           key={`connection-${index}`}
           connection={connection}
           nodes={nodes}
-          time={state.clock.elapsedTime}
+          time={time}
         />
       ))}
       
@@ -205,7 +207,7 @@ function NeuralNetworkScene() {
           key={`pulse-${index}`}
           connection={connection}
           nodes={nodes}
-          time={state.clock.elapsedTime + index * 0.2}
+          time={time + index * 0.2}
         />
       ))}
 

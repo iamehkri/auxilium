@@ -62,15 +62,14 @@ export function RevealOnView({
         });
       }
 
-      animate(
-        targets,
-        { opacity: 1, transform: "translateY(0) scale(1)", filter: "blur(0px)" },
-        { 
-          duration: 0.95, 
-          delay: targets.length > 1 ? stagger(0.12, { start: delay }) : delay, 
-          easing: "cubic-bezier(0.22, 1, 0.36, 1)" 
-        }
-      );
+      targets.forEach((target, index) => {
+        setTimeout(() => {
+          (target as HTMLElement).style.opacity = '1';
+          (target as HTMLElement).style.transform = 'translateY(0) scale(1)';
+          (target as HTMLElement).style.filter = 'blur(0px)';
+          (target as HTMLElement).style.transition = 'all 0.95s cubic-bezier(0.22, 1, 0.36, 1)';
+        }, delay * 1000 + (targets.length > 1 ? index * 120 : 0));
+      });
     });
 
     return () => cleanup();
