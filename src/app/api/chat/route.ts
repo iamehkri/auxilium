@@ -1,39 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleAuth } from 'google-auth-library';
-import path from 'path';
 
-// Initialize Google Auth with service account
-const auth = new GoogleAuth({
-  keyFile: path.join(process.cwd(), 'sa-private-key.json'),
-  scopes: ['https://www.googleapis.com/auth/cloud-platform']
-});
+// Make direct REST API call to Claude
+async function callClaude(prompt: string) {
+  const apiKey = process.env.CLAUDE_API_KEY;
 
-// Make direct REST API call to Vertex AI
-async function callVertexAI(prompt: string) {
-  const client = await auth.getClient();
-  const projectId = 'yobi-2f529'; // From your service account
-  const location = 'us-central1';
+  if (!apiKey) {
+    throw new Error('CLAUDE_API_KEY environment variable is not set');
+  }
 
-  const url = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/gemini-2.0-flash-exp:generateContent`;
-
-  const response = await client.request({
-    url,
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    data: {
-      contents: [{
-        role: 'user',
-        parts: [{ text: prompt }]
-      }],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.9,
-        maxOutputTokens: 3072
-      }
-    }
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 3000,
+      temperature: 0.7,
+      messages: [
+        {
+          role: 'user',
+          content: prompt
+        }
+      ]
+    })
   });
 
-  return response.data;
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Claude API error: ${response.status} - ${error}`);
+  }
+
+  const data = await response.json();
+  return data;
 }
 
 const SYSTEM_PROMPT = `You are an expert digital strategy consultant for Auxilium.io. Based on the phase and user input, you will provide appropriate JSON responses for the chip-based clarification system.
@@ -163,9 +164,9 @@ Original challenge: "${message}"
 Provide final_assessment response with comprehensive CLEAR analysis based on their specific selections and industry.`;
     }
 
-    // Generate response using Vertex AI
-    const result = await callVertexAI(fullPrompt) as any;
-    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    // Generate response using Claude
+    const result = await callClaude(fullPrompt) as any;
+    const text = result.content?.[0]?.text || '';
 
     // Try to parse as JSON
     try {
@@ -196,7 +197,7 @@ Provide final_assessment response with comprehensive CLEAR analysis based on the
     }
 
   } catch (error) {
-    console.error('Gemini API Error:', error);
+    console.error('Claude API Error:', error);
 
     // Fallback response - simple and direct
     const fallbackResponse = `We're experiencing high demand right now. Please try again in a moment, and we'll provide you with personalized strategic insights for your challenge.`;
