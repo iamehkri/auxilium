@@ -26,28 +26,43 @@ async function callClaude(prompt: string) {
 
   console.log('Request body:', JSON.stringify(requestBody, null, 2));
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify(requestBody)
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-  console.log('Claude API Response status:', response.status);
-  console.log('Claude API Response headers:', Object.fromEntries(response.headers.entries()));
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal
+    });
 
-  if (!response.ok) {
-    const error = await response.text();
-    console.error('Claude API error response:', error);
-    throw new Error(`Claude API error: ${response.status} - ${error}`);
+    clearTimeout(timeoutId);
+
+    console.log('Claude API Response status:', response.status);
+    console.log('Claude API Response headers:', Object.fromEntries(response.headers.entries()));
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Claude API error response:', error);
+      throw new Error(`Claude API error: ${response.status} - ${error}`);
+    }
+
+    const data = await response.json();
+    console.log('Claude API Response data:', JSON.stringify(data, null, 2));
+    return data;
+
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Claude API request timed out after 30 seconds');
+    }
+    throw error;
   }
-
-  const data = await response.json();
-  console.log('Claude API Response data:', JSON.stringify(data, null, 2));
-  return data;
 }
 
 const SYSTEM_PROMPT = `You are an expert digital strategy consultant for Auxilium.io. Based on the phase and user input, you will provide appropriate JSON responses for the chip-based clarification system.
@@ -141,20 +156,29 @@ export async function POST(request: NextRequest) {
     // Create the appropriate prompt based on the phase and context
     let fullPrompt = '';
 
-    if (phase === 'industry_selection') {
+    console.log('Phase received:', phase);
+    console.log('Industry received:', industry);
+    console.log('Category received:', category);
+    console.log('Context received:', { phase, industry, category, specificDetails, message });
+
+    // Default to industry_selection if no phase specified or if it's the first message
+    if (!phase || phase === 'industry_selection' || (!industry && !category)) {
+      console.log('Using industry_selection flow');
       fullPrompt = `${SYSTEM_PROMPT}
 
 User's challenge: "${message}"
 
-Analyze if this challenge is specific and actionable. If YES, provide a final_assessment. If NO (vague), provide industry_selection response.`;
-    } else if (phase === 'challenge_category') {
+Since this is the first interaction, provide industry_selection response to help identify their organization type.`;
+    } else if (phase === 'challenge_category' && industry) {
+      console.log('Using challenge_category flow');
       fullPrompt = `${SYSTEM_PROMPT}
 
 User selected industry: ${industry}
 Original challenge: "${message}"
 
 Provide challenge_category response with categories tailored to the ${industry} industry.`;
-    } else if (phase === 'specific_details') {
+    } else if (phase === 'specific_details' && industry && category) {
+      console.log('Using specific_details flow');
       fullPrompt = `${SYSTEM_PROMPT}
 
 User selected:
@@ -163,11 +187,12 @@ User selected:
 Original challenge: "${message}"
 
 Provide specific_details response with 6-8 specific issues for ${industry} organizations facing ${category} challenges.`;
-    } else {
+    } else if (phase === 'final_assessment' && industry && category) {
+      console.log('Using final_assessment flow');
       // Final assessment
       const contextInfo = specificDetails ?
         `Selected: Industry: ${industry}, Category: ${category}, Specific Details: ${specificDetails.join(', ')}` :
-        `Industry: ${industry || 'inferred'}, Challenge: ${message}`;
+        `Industry: ${industry}, Category: ${category}, Challenge: ${message}`;
 
       fullPrompt = `${SYSTEM_PROMPT}
 
@@ -175,6 +200,14 @@ ${contextInfo}
 Original challenge: "${message}"
 
 Provide final_assessment response with comprehensive CLEAR analysis based on their specific selections and industry.`;
+    } else {
+      console.log('Fallback to industry_selection due to missing context');
+      // Fallback to industry selection if we don't have proper context
+      fullPrompt = `${SYSTEM_PROMPT}
+
+User's challenge: "${message}"
+
+Since we don't have complete context, provide industry_selection response to help identify their organization type.`;
     }
 
     // Generate response using Claude
