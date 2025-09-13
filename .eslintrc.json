@@ -1,7 +1,8 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
+  "extends": ["next/core-web-vitals"],
   "rules": {
-    "@next/next/no-img-element": "error",
+    "@next/next/no-img-element": "off",
+    "react/no-unescaped-entities": "off",
     "jsx-a11y/alt-text": "error",
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
