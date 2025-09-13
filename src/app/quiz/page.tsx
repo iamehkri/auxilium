@@ -461,7 +461,6 @@ export default function Quiz() {
           className="absolute inset-0 w-full h-full"
           colors={["#000000", "#1e3a8a", "#374151", "#0f172a", "#065f46"]}
           speed={0.1}
-          backgroundColor="#000000"
         />
       </div>
 
