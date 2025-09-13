@@ -51,14 +51,14 @@ const LiquidGlassNav: React.FC = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-4xl px-4">
-      <div className="glass rounded-2xl shadow-lg border border-white/20 dark:border-white/10">
+      <div className="glass-ultra-dark rounded-2xl shadow-2xl border border-white/30">
         <div className="flex items-center justify-between px-6 py-4">
           {/* Logo */}
           <div className="flex items-center">
             <div className="w-16 h-16 relative">
               <Image 
-                src="/logo.webp" 
-                alt="Auxilium.io Logo" 
+                src="/logo.png" 
+                alt="The Agentic Agency Logo" 
                 fill 
                 className="object-contain"
                 priority
@@ -74,12 +74,12 @@ const LiquidGlassNav: React.FC = () => {
                 onClick={() => handleNavClick(item)}
                 className={`relative px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                   activeItem === item.label
-                    ? 'text-auxilium-teal'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-auxilium-teal'
+                    ? 'text-empower-blue'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-empower-blue'
                 }`}
               >
                 {activeItem === item.label && (
-                  <div className="absolute inset-0 bg-auxilium-teal/10 rounded-xl nav-pill"></div>
+                  <div className="absolute inset-0 bg-empower-blue/10 rounded-xl nav-pill"></div>
                 )}
                 <span className="relative z-10">{item.label}</span>
               </button>
@@ -91,7 +91,7 @@ const LiquidGlassNav: React.FC = () => {
             {/* Dark mode toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-3 rounded-xl bg-gradient-to-r from-auxilium-teal to-resilience-violet hover:from-resilience-violet hover:to-auxilium-teal transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="p-3 rounded-xl bg-gradient-to-r from-empower-blue to-agentic-violet hover:from-agentic-violet hover:to-empower-blue transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               aria-label="Toggle dark mode"
             >
               {isDark ? (
@@ -126,8 +126,8 @@ const LiquidGlassNav: React.FC = () => {
                   onClick={() => handleNavClick(item)}
                   className={`block w-full text-left px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     activeItem === item.label
-                      ? 'text-auxilium-teal bg-auxilium-teal/10'
-                      : 'text-gray-700 dark:text-gray-300 hover:text-auxilium-teal hover:bg-white/10'
+                      ? 'text-empower-blue bg-empower-blue/10'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-empower-blue hover:bg-white/10'
                   }`}
                 >
                   {item.label}

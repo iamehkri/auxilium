@@ -2,20 +2,25 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Auxilium.io - Empowering Resilience Through Digital Aid',
-  description: 'Your digital ally for modern web development, meaningful marketing, virtual experiences, media development, AI-powered workflows, and strategic consulting.',
-  keywords: 'web development, app development, marketing, AI solutions, consulting, digital aid',
-  authors: [{ name: 'Auxilium.io' }],
+  title: 'Bridging Divides. Building Resilience. — Auxilium.io',
+  description: 'Strategic partners in digital transformation. At Auxilium.io, we partner with mission-driven organizations to co-create solutions that address systemic challenges.',
+  keywords: 'digital transformation, mission-driven, strategic consulting, nonprofit technology, social impact, systemic change, organizational resilience',
+  authors: [{ name: 'Auxilium' }],
+  icons: {
+    icon: '/logo-icon.png',
+    shortcut: '/logo-icon.png',
+    apple: '/logo-icon.png',
+  },
   openGraph: {
-    title: 'Auxilium.io - Empowering Resilience Through Digital Aid',
-    description: 'Your digital ally for modern web development, meaningful marketing, virtual experiences, media development, AI-powered workflows, and strategic consulting.',
+    title: 'Bridging Divides. Building Resilience. — Auxilium.io',
+    description: 'Strategic partners in digital transformation. At Auxilium.io, we partner with mission-driven organizations to co-create solutions that address systemic challenges.',
     type: 'website',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Auxilium.io - Empowering Resilience Through Digital Aid',
-    description: 'Your digital ally for modern web development, meaningful marketing, virtual experiences, media development, AI-powered workflows, and strategic consulting.',
+    title: 'Bridging Divides. Building Resilience. — Auxilium.io',
+    description: 'Strategic partners in digital transformation. At Auxilium.io, we partner with mission-driven organizations to co-create solutions that address systemic challenges.',
   },
   viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',

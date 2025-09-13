@@ -25,21 +25,23 @@ const CTA: React.FC = () => {
           <div className="relative glass rounded-3xl border border-white/30 overflow-hidden">
             {/* Content */}
             <div className="relative z-10 p-12 md:p-16 text-center">
-              <h2 className="font-sora font-bold text-4xl md:text-5xl lg:text-6xl mb-6 text-white">
-                Let's Build Resilience Together
-              </h2>
-              
-              <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed">
-                Ready to transform your organization with cutting-edge digital solutions? 
-                Let's create something extraordinary that empowers your mission and strengthens your impact.
-              </p>
+              <h2 className="font-sora font-bold text-4xl md:text-5xl lg:text-6xl mb-6 text-white">What’s your “it”?</h2>
+
+              <div className="text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
+                <ul className="space-y-2 text-left mx-auto w-fit text-lg md:text-xl">
+                  <li className="flex items-center"><span className="w-2 h-2 rounded-full bg-white/60 mr-3"></span>Launching a new platform?</li>
+                  <li className="flex items-center"><span className="w-2 h-2 rounded-full bg-white/60 mr-3"></span>Modernizing outdated systems?</li>
+                  <li className="flex items-center"><span className="w-2 h-2 rounded-full bg-white/60 mr-3"></span>Creating digital tools for resilient communities?</li>
+                </ul>
+                <p className="text-lg md:text-xl text-white/90 mt-6 text-center">Auxilium.io makes it extremely simple.</p>
+              </div>
 
               {/* CTA Button */}
               <button
                 onClick={handleStartProject}
                 className="inline-flex items-center px-12 py-6 bg-white text-auxilium-teal font-bold text-xl rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 hover:bg-white-sand group"
               >
-                <span>Start Your Project</span>
+                <span>Let’s Simplify Your “It”</span>
                 <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
 
@@ -80,30 +82,24 @@ const CTA: React.FC = () => {
             <div className="w-12 h-12 bg-auxilium-gradient rounded-xl flex items-center justify-center mx-auto mb-4">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <h3 className="font-sora font-bold text-lg mb-2 text-gray-800 dark:text-white">Fast Delivery</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Get your project launched quickly with our streamlined development process
-            </p>
+            <h3 className="font-sora font-bold text-lg mb-2 text-gray-800 dark:text-white">Move Fast</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Ship sooner. Learn faster. Improve continuously.</p>
           </div>
 
           <div className="text-center glass rounded-2xl p-6 border border-white/20 dark:border-white/10">
             <div className="w-12 h-12 bg-resilience-violet rounded-xl flex items-center justify-center mx-auto mb-4">
               <Shield className="w-6 h-6 text-white" />
             </div>
-            <h3 className="font-sora font-bold text-lg mb-2 text-gray-800 dark:text-white">Secure & Reliable</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Enterprise-grade security and reliability built into every solution
-            </p>
+            <h3 className="font-sora font-bold text-lg mb-2 text-gray-800 dark:text-white">Built to Last</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Reliable foundations. Calm operations. Fewer surprises.</p>
           </div>
 
           <div className="text-center glass rounded-2xl p-6 border border-white/20 dark:border-white/10">
             <div className="w-12 h-12 bg-calm-sky rounded-xl flex items-center justify-center mx-auto mb-4">
               <Users className="w-6 h-6 text-white" />
             </div>
-            <h3 className="font-sora font-bold text-lg mb-2 text-gray-800 dark:text-white">Ongoing Support</h3>
-            <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Continuous support and maintenance to keep your systems running smoothly
-            </p>
+            <h3 className="font-sora font-bold text-lg mb-2 text-gray-800 dark:text-white">A Real Partner</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">Outcome‑focused. Transparent. Here when it matters.</p>
           </div>
         </div>
       </div>
