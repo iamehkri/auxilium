@@ -8,6 +8,24 @@ async function callClaude(prompt: string) {
     throw new Error('CLAUDE_API_KEY environment variable is not set');
   }
 
+  console.log('Making Claude API call...');
+  console.log('API Key present:', apiKey ? 'Yes' : 'No');
+  console.log('API Key prefix:', apiKey ? apiKey.substring(0, 10) + '...' : 'None');
+
+  const requestBody = {
+    model: 'claude-3-haiku-20240307',
+    max_tokens: 3000,
+    temperature: 0.7,
+    messages: [
+      {
+        role: 'user',
+        content: prompt
+      }
+    ]
+  };
+
+  console.log('Request body:', JSON.stringify(requestBody, null, 2));
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -15,25 +33,20 @@ async function callClaude(prompt: string) {
       'x-api-key': apiKey,
       'anthropic-version': '2023-06-01'
     },
-    body: JSON.stringify({
-      model: 'claude-3-haiku-20240307',
-      max_tokens: 3000,
-      temperature: 0.7,
-      messages: [
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
-    })
+    body: JSON.stringify(requestBody)
   });
+
+  console.log('Claude API Response status:', response.status);
+  console.log('Claude API Response headers:', Object.fromEntries(response.headers.entries()));
 
   if (!response.ok) {
     const error = await response.text();
+    console.error('Claude API error response:', error);
     throw new Error(`Claude API error: ${response.status} - ${error}`);
   }
 
   const data = await response.json();
+  console.log('Claude API Response data:', JSON.stringify(data, null, 2));
   return data;
 }
 
@@ -199,14 +212,35 @@ Provide final_assessment response with comprehensive CLEAR analysis based on the
   } catch (error) {
     console.error('Claude API Error:', error);
 
-    // Fallback response - simple and direct
-    const fallbackResponse = `We're experiencing high demand right now. Please try again in a moment, and we'll provide you with personalized strategic insights for your challenge.`;
+    // More detailed error logging
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
+
+    // Check if it's an API key issue
+    const apiKey = process.env.CLAUDE_API_KEY;
+    if (!apiKey) {
+      console.error('CLAUDE_API_KEY is not set in environment variables');
+      return NextResponse.json({
+        type: 'text',
+        response: 'Configuration error: API key not found. Please check your environment variables.',
+        timestamp: new Date().toISOString(),
+        error: 'missing_api_key'
+      });
+    }
+
+    // Return more specific error information in development
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const errorMessage = isDevelopment && error instanceof Error ? error.message :
+      'We\'re experiencing high demand right now. Please try again in a moment, and we\'ll provide you with personalized strategic insights for your challenge.';
 
     return NextResponse.json({
       type: 'text',
-      response: fallbackResponse,
+      response: errorMessage,
       timestamp: new Date().toISOString(),
-      fallback: true
+      fallback: true,
+      ...(isDevelopment && { debug: { error: error instanceof Error ? error.message : 'Unknown error' } })
     });
   }
 }
